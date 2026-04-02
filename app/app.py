@@ -20,9 +20,7 @@ def load_artifacts():
     with open("../models/scaler.pkl", "rb") as f:
         scaler = pickle.load(f)
     with open("../models/features.pkl", "rb") as f:
-        features = pickle.load
-        
-        (f)
+        features = pickle.load(f)
     return model, scaler, features
 
 model, scaler, feature_names = load_artifacts()
@@ -207,7 +205,7 @@ elif page == "🔍 Predict Transaction":
                         lambda x: 'background-color: #ffcccc' if x == '🚨 Fraud' else '',
                         subset=['Result']
                     ),
-                    use_container_width=True
+                    width='stretch'
                 )
 
                 csv_out = batch_df.to_csv(index=False)
