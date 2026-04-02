@@ -15,7 +15,6 @@ venv/
 data/
 
 # Models (optional but recommended)
-*.pkl
 
 # Streamlit cache
 .streamlit/
