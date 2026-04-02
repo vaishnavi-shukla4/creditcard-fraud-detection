@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -15,13 +16,19 @@ st.set_page_config(
 # ── Load model & scaler ───────────────────────────────────────────────────────
 @st.cache_resource
 def load_artifacts():
+    base_path = os.path.dirname(__file__)  # folder where app.py lives
+
+    model_path = os.path.join(base_path, "model.pkl")
+    scaler_path = os.path.join(base_path, "scaler.pkl")
+    features_path = os.path.join(base_path, "features.pkl")
     
-    with open("model.pkl", "rb") as f:
+    with open(model_path, "rb") as f:
         model = pickle.load(f)
-    with open("scaler.pkl", "rb") as f:
+    with open(scaler_path, "rb") as f:
         scaler = pickle.load(f)
-    with open("features.pkl", "rb") as f:
+    with open(features_path, "rb") as f:
         features = pickle.load(f)
+
     return model, scaler, features
 
 model, scaler, feature_names = load_artifacts()
