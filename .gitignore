@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env
+.venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Data (very important)
+data/
+
+# Models (optional but recommended)
+
+# Streamlit cache
+.streamlit/
+
+# OS files
+.DS_Store
+Thumbs.db
