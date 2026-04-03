@@ -1,4 +1,3 @@
-import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -16,19 +15,12 @@ st.set_page_config(
 # ── Load model & scaler ───────────────────────────────────────────────────────
 @st.cache_resource
 def load_artifacts():
-    base_path = os.path.dirname(__file__)  # folder where app.py lives
-
-    model_path = os.path.join(base_path, "model.pkl")
-    scaler_path = os.path.join(base_path, "scaler.pkl")
-    features_path = os.path.join(base_path, "features.pkl")
-    
-    with open(model_path, "rb") as f:
+    with open("model.pkl", "rb") as f:
         model = pickle.load(f)
-    with open(scaler_path, "rb") as f:
+    with open("scaler.pkl", "rb") as f:
         scaler = pickle.load(f)
-    with open(features_path, "rb") as f:
+    with open("features.pkl", "rb") as f:
         features = pickle.load(f)
-
     return model, scaler, features
 
 model, scaler, feature_names = load_artifacts()
@@ -208,13 +200,26 @@ elif page == "🔍 Predict Transaction":
                 flagged = preds.sum()
                 st.error(f"🚨 {flagged} fraudulent transactions detected out of {len(preds):,}")
 
-                st.dataframe(
-                    batch_df[['Fraud_Probability', 'Result']].style.applymap(
-                        lambda x: 'background-color: #ffcccc' if x == '🚨 Fraud' else '',
-                        subset=['Result']
-                    ),
-                    width='stretch'
-                )
+                display_df = batch_df[['Fraud_Probability', 'Result']]
+                cell_count = display_df.size
+
+                def highlight_fraud(val):
+                    return 'background-color: #ffcccc' if val == '🚨 Fraud' else ''
+
+                if cell_count <= 262144:
+                    try:
+                        styled = display_df.style.map(highlight_fraud, subset=['Result'])
+                    except AttributeError:
+                        styled = display_df.style.applymap(highlight_fraud, subset=['Result'])
+                    st.dataframe(styled, use_container_width=True)
+                else:
+                    pd.set_option("styler.render.max_elements", cell_count)
+                    try:
+                        styled = display_df.style.map(highlight_fraud, subset=['Result'])
+                    except AttributeError:
+                        styled = display_df.style.applymap(highlight_fraud, subset=['Result'])
+                    st.dataframe(styled, use_container_width=True)
+                    pd.reset_option("styler.render.max_elements")
 
                 csv_out = batch_df.to_csv(index=False)
                 st.download_button("⬇️ Download Results", csv_out, "fraud_predictions.csv", "text/csv")
