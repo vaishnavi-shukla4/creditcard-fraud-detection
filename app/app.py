@@ -4,6 +4,7 @@ import numpy as np
 import pickle
 import matplotlib.pyplot as plt
 import shap
+import os
 
 # ── Page config ──────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -15,11 +16,14 @@ st.set_page_config(
 # ── Load model & scaler ───────────────────────────────────────────────────────
 @st.cache_resource
 def load_artifacts():
-    with open("model.pkl", "rb") as f:
+    # Get the directory where this script is located
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    with open(os.path.join(script_dir, "model.pkl"), "rb") as f:
         model = pickle.load(f)
-    with open("scaler.pkl", "rb") as f:
+    with open(os.path.join(script_dir, "scaler.pkl"), "rb") as f:
         scaler = pickle.load(f)
-    with open("features.pkl", "rb") as f:
+    with open(os.path.join(script_dir, "features.pkl"), "rb") as f:
         features = pickle.load(f)
     return model, scaler, features
 
