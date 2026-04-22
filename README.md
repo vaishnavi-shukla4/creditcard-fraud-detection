@@ -16,7 +16,7 @@ Machine Learning project to detect fraudulent transactions using classification 
 ## 🧠 Models Used
 - Logistic Regression
 - Random Forest
-- SVM
+- XG Boost
 
 ## 📈 Features
 - Data preprocessing & scaling
